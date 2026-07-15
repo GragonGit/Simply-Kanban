@@ -2,7 +2,6 @@
 export default defineNuxtConfig({
   compatibilityDate: '2026-07-15',
   devtools: { enabled: true },
-
   ssr: false,
 
   app: {
@@ -27,5 +26,16 @@ export default defineNuxtConfig({
 
   typescript: {
     strict: true
+  },
+
+  modules: [
+    '@nuxtjs/i18n'
+  ],
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', language: 'en-US' },
+      { code: 'de', name: 'German', language: 'de-DE' }
+    ],
+    defaultLocale: 'en',
   }
 })
