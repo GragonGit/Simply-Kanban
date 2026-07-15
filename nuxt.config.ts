@@ -32,16 +32,6 @@ export default defineNuxtConfig({
 
   css: ['~/assets/scss/main.scss'],
 
-  // vite: {
-  //   css: {
-  //     preprocessorOptions: {
-  //       scss: {
-  //         api: 'modern-compiler'
-  //       }
-  //     }
-  //   }
-  // },
-
   typescript: {
     strict: true
   }

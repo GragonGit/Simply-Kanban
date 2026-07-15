@@ -17,16 +17,6 @@ Synchronisation, kein Backend. Der Status einer Karte ist ein GitHub-Label
 - **Reihenfolge innerhalb einer Spalte wird nicht gespeichert** – GitHub-Issues
   haben kein natives Sortierfeld. Nur die Spalte (der Status) ist persistent.
 
-## Lokal starten
-
-```bash
-npm install
-npm run dev
-```
-
-Die App läuft dann unter `http://localhost:3000`. Beim ersten Start fragt sie
-nach Owner, Repository-Name und einem Personal Access Token.
-
 ## Personal Access Token erstellen
 
 1. [github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta) öffnen
