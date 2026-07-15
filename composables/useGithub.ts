@@ -1,5 +1,4 @@
-import { Octokit } from '@octokit/rest'
-import { useSettings } from './useSettings'
+import { Octokit } from "@octokit/rest"
 
 export interface StatusColumn {
   key: string
@@ -8,8 +7,6 @@ export interface StatusColumn {
   color: string
 }
 
-// Die vier Spalten des Boards. Jede Spalte entspricht einem GitHub-Label.
-// Ein Issue ohne Status-Label gilt als "To Do".
 export const STATUS_COLUMNS: StatusColumn[] = [
   { key: 'todo', label: 'To Do', labelName: 'status:todo', color: '94a3b8' },
   { key: 'in-progress', label: 'In Progress', labelName: 'status:in-progress', color: 'f59e0b' },
@@ -77,7 +74,6 @@ export function useGithub() {
     }
   }
 
-  /** Legt fehlende status:*-Labels im Repo an (einmalig, mit Spaltenfarben). */
   async function ensureStatusLabelsExist(): Promise<void> {
     return wrap(async () => {
       const octokit = client()
@@ -133,7 +129,6 @@ export function useGithub() {
     })
   }
 
-  /** Ändert den Status eines Issues, indem das alte status:*-Label durch das neue ersetzt wird. */
   async function updateIssueStatus(issue: BoardIssue, newStatusKey: string): Promise<void> {
     return wrap(async () => {
       const octokit = client()
@@ -191,7 +186,6 @@ export function useGithub() {
     })
   }
 
-  /** Prüft die Zugangsdaten mit einem leichten Request (für den "Verbinden"-Test in den Einstellungen). */
   async function testConnection(): Promise<void> {
     return wrap(async () => {
       const octokit = client()

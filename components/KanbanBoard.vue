@@ -1,9 +1,45 @@
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { STATUS_COLUMNS, type BoardIssue } from '../composables/useGithub'
-import { useSettings } from '../composables/useSettings'
-import { useGithub } from '../composables/useGithub'
+<template>
+  <div class="board-page">
+    <header class="topbar">
+      <div class="topbar__identity">
+        <span class="topbar__dot" />
+        <span class="topbar__repo">{{ settings.owner }}/{{ settings.repo }}</span>
+      </div>
+      <div class="topbar__actions">
+        <button class="btn btn--ghost" :disabled="loading" @click="load">
+          {{ loading ? 'Lädt…' : 'Aktualisieren' }}
+        </button>
+        <button class="btn btn--ghost" @click="disconnect">Repo wechseln</button>
+      </div>
+    </header>
 
+    <p v-if="errorMessage" class="banner banner--error" role="alert">{{ errorMessage }}</p>
+
+    <div v-if="loading && !issues.length" class="loading">Issues werden geladen…</div>
+
+    <div v-else class="board">
+      <KanbanColumn
+        v-for="col in columns"
+        :key="col.key"
+        :column="col"
+        :issues="col.issues"
+        @open="openIssue"
+        @moved="handleMoved"
+        @add="openNewIssue"
+      />
+    </div>
+
+    <IssueModal
+      v-if="showModal"
+      :issue="activeIssue"
+      :default-status="modalDefaultStatus"
+      @close="closeModal"
+      @save="handleSave"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
 const { settings, clear } = useSettings()
 const { fetchIssues, updateIssueStatus, updateIssueContent, createIssue, ensureStatusLabelsExist } = useGithub()
 
@@ -95,47 +131,6 @@ function disconnect() {
   clear()
 }
 </script>
-
-<template>
-  <div class="board-page">
-    <header class="topbar">
-      <div class="topbar__identity">
-        <span class="topbar__dot" />
-        <span class="topbar__repo">{{ settings.owner }}/{{ settings.repo }}</span>
-      </div>
-      <div class="topbar__actions">
-        <button class="btn btn--ghost" :disabled="loading" @click="load">
-          {{ loading ? 'Lädt…' : 'Aktualisieren' }}
-        </button>
-        <button class="btn btn--ghost" @click="disconnect">Repo wechseln</button>
-      </div>
-    </header>
-
-    <p v-if="errorMessage" class="banner banner--error" role="alert">{{ errorMessage }}</p>
-
-    <div v-if="loading && !issues.length" class="loading">Issues werden geladen…</div>
-
-    <div v-else class="board">
-      <KanbanColumn
-        v-for="col in columns"
-        :key="col.key"
-        :column="col"
-        :issues="col.issues"
-        @open="openIssue"
-        @moved="handleMoved"
-        @add="openNewIssue"
-      />
-    </div>
-
-    <IssueModal
-      v-if="showModal"
-      :issue="activeIssue"
-      :default-status="modalDefaultStatus"
-      @close="closeModal"
-      @save="handleSave"
-    />
-  </div>
-</template>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;

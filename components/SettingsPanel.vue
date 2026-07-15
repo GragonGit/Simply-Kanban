@@ -1,51 +1,3 @@
-<script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
-import { useGithub } from '../composables/useGithub';
-import { useSettings } from '../composables/useSettings';
-
-const { settings, save, clear } = useSettings()
-const { testConnection } = useGithub()
-
-const emit = defineEmits<{ (e: 'connected'): void }>()
-
-const form = reactive({
-  owner: settings.value.owner,
-  repo: settings.value.repo,
-  token: settings.value.token
-})
-
-const status = ref<'idle' | 'testing' | 'error'>('idle')
-const errorMessage = ref('')
-
-const canSubmit = computed(() => !!(form.owner.trim() && form.repo.trim() && form.token.trim()))
-
-async function handleSubmit() {
-  if (!canSubmit.value) return
-  status.value = 'testing'
-  errorMessage.value = ''
-
-  save({ owner: form.owner.trim(), repo: form.repo.trim(), token: form.token.trim() })
-
-  try {
-    await testConnection()
-    status.value = 'idle'
-    emit('connected')
-  } catch (err: any) {
-    status.value = 'error'
-    errorMessage.value = err?.message || 'Verbindung fehlgeschlagen.'
-  }
-}
-
-function handleReset() {
-  clear()
-  form.owner = ''
-  form.repo = ''
-  form.token = ''
-  status.value = 'idle'
-  errorMessage.value = ''
-}
-</script>
-
 <template>
   <div class="settings">
     <div class="settings__card">
@@ -90,6 +42,52 @@ function handleReset() {
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { computed, reactive, ref } from 'vue';
+import { useGithub } from '../composables/useGithub';
+const { settings, save, clear } = useSettings()
+const { testConnection } = useGithub()
+
+const emit = defineEmits<{ (e: 'connected'): void }>()
+
+const form = reactive({
+  owner: settings.value.owner,
+  repo: settings.value.repo,
+  token: settings.value.token
+})
+
+const status = ref<'idle' | 'testing' | 'error'>('idle')
+const errorMessage = ref('')
+
+const canSubmit = computed(() => !!(form.owner.trim() && form.repo.trim() && form.token.trim()))
+
+async function handleSubmit() {
+  if (!canSubmit.value) return
+  status.value = 'testing'
+  errorMessage.value = ''
+
+  save({ owner: form.owner.trim(), repo: form.repo.trim(), token: form.token.trim() })
+
+  try {
+    await testConnection()
+    status.value = 'idle'
+    emit('connected')
+  } catch (err: any) {
+    status.value = 'error'
+    errorMessage.value = err?.message || 'Verbindung fehlgeschlagen.'
+  }
+}
+
+function handleReset() {
+  clear()
+  form.owner = ''
+  form.repo = ''
+  form.token = ''
+  status.value = 'idle'
+  errorMessage.value = ''
+}
+</script>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;

@@ -1,6 +1,3 @@
-import { useState } from "nuxt/app"
-import { computed } from "vue"
-
 export interface GithubSettings {
   token: string
   owner: string
@@ -11,12 +8,6 @@ const STORAGE_KEY = 'repo-kanban:github-settings'
 
 const emptySettings = (): GithubSettings => ({ token: '', owner: '', repo: '' })
 
-/**
- * Verwaltet die GitHub-Zugangsdaten (Personal Access Token + Repo-Koordinaten).
- * Wird bewusst NICHT im Build eingebettet, sondern zur Laufzeit im Browser
- * eingegeben und in localStorage gespeichert – die App bleibt dadurch ein
- * reines, statisch hostbares Frontend ohne eigenes Backend.
- */
 export function useSettings() {
   const settings = useState<GithubSettings>('github-settings', emptySettings)
   const hydrated = useState<boolean>('github-settings-hydrated', () => false)

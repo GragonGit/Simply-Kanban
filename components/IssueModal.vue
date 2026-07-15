@@ -1,52 +1,3 @@
-<script setup lang="ts">
-import { computed, ref, reactive, onMounted, onUnmounted } from 'vue';
-import { STATUS_COLUMNS, type BoardIssue } from '../composables/useGithub'
-
-const props = defineProps<{
-  issue: BoardIssue | null // null = "neues Issue" Modus
-  defaultStatus?: string
-}>()
-
-const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'save', payload: { title: string; body: string; status: string; closeIssue: boolean }): void
-}>()
-
-const isEditMode = computed(() => !!props.issue)
-
-const form = reactive({
-  title: props.issue?.title ?? '',
-  body: props.issue?.body ?? '',
-  status: props.issue?.status ?? props.defaultStatus ?? 'todo',
-  closeIssue: false
-})
-
-const saving = ref(false)
-const canSave = computed(() => form.title.trim().length > 0)
-
-async function handleSave() {
-  if (!canSave.value) return
-  saving.value = true
-  emit('save', {
-    title: form.title.trim(),
-    body: form.body,
-    status: form.status,
-    closeIssue: form.closeIssue
-  })
-}
-
-function handleOverlayClick(e: MouseEvent) {
-  if (e.target === e.currentTarget) emit('close')
-}
-
-function handleKeydown(e: KeyboardEvent) {
-  if (e.key === 'Escape') emit('close')
-}
-
-onMounted(() => window.addEventListener('keydown', handleKeydown))
-onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
-</script>
-
 <template>
   <div class="overlay" @mousedown="handleOverlayClick">
     <div class="modal" role="dialog" aria-modal="true">
@@ -89,6 +40,52 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const props = defineProps<{
+  issue: BoardIssue | null
+  defaultStatus?: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'save', payload: { title: string; body: string; status: string; closeIssue: boolean }): void
+}>()
+
+const isEditMode = computed(() => !!props.issue)
+
+const form = reactive({
+  title: props.issue?.title ?? '',
+  body: props.issue?.body ?? '',
+  status: props.issue?.status ?? props.defaultStatus ?? 'todo',
+  closeIssue: false
+})
+
+const saving = ref(false)
+const canSave = computed(() => form.title.trim().length > 0)
+
+async function handleSave() {
+  if (!canSave.value) return
+  saving.value = true
+  emit('save', {
+    title: form.title.trim(),
+    body: form.body,
+    status: form.status,
+    closeIssue: form.closeIssue
+  })
+}
+
+function handleOverlayClick(e: MouseEvent) {
+  if (e.target === e.currentTarget) emit('close')
+}
+
+function handleKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') emit('close')
+}
+
+onMounted(() => window.addEventListener('keydown', handleKeydown))
+onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
+</script>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;

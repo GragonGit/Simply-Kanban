@@ -1,7 +1,28 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-import type { BoardIssue } from '../composables/useGithub'
+<template>
+<article class="card" tabindex="0" @click="$emit('open', issue)" @keydown.enter="$emit('open', issue)">
+  <header class="card__head">
+    <span class="card__number">#{{ issue.number }}</span>
+    <span v-if="issue.assignee" class="card__avatar" :title="issue.assignee.login">
+      <img :src="issue.assignee.avatarUrl" :alt="issue.assignee.login" />
+    </span>
+  </header>
 
+  <h3 class="card__title">{{ issue.title }}</h3>
+
+  <div v-if="issue.labels.length" class="card__labels">
+    <span v-for="label in issue.labels.filter((l) => !l.name.startsWith('status:'))" :key="label.name" class="chip"
+      :style="{ '--chip-color': `#${label.color}` }">
+      {{ label.name }}
+    </span>
+  </div>
+
+  <footer class="card__foot">
+    <span class="card__time">{{ relativeTime }}</span>
+  </footer>
+</article>
+</template>
+
+<script setup lang="ts">
 const props = defineProps<{ issue: BoardIssue }>()
 defineEmits<{ (e: 'open', issue: BoardIssue): void }>()
 
@@ -16,34 +37,6 @@ const relativeTime = computed(() => {
   return new Date(props.issue.updatedAt).toLocaleDateString('de-DE', { day: '2-digit', month: 'short' })
 })
 </script>
-
-<template>
-  <article class="card" tabindex="0" @click="$emit('open', issue)" @keydown.enter="$emit('open', issue)">
-    <header class="card__head">
-      <span class="card__number">#{{ issue.number }}</span>
-      <span v-if="issue.assignee" class="card__avatar" :title="issue.assignee.login">
-        <img :src="issue.assignee.avatarUrl" :alt="issue.assignee.login" />
-      </span>
-    </header>
-
-    <h3 class="card__title">{{ issue.title }}</h3>
-
-    <div v-if="issue.labels.length" class="card__labels">
-      <span
-        v-for="label in issue.labels.filter((l) => !l.name.startsWith('status:'))"
-        :key="label.name"
-        class="chip"
-        :style="{ '--chip-color': `#${label.color}` }"
-      >
-        {{ label.name }}
-      </span>
-    </div>
-
-    <footer class="card__foot">
-      <span class="card__time">{{ relativeTime }}</span>
-    </footer>
-  </article>
-</template>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;
