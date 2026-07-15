@@ -1,86 +1,83 @@
 # Repo Kanban
 
-Ein schlankes Kanban-Board für **ein einzelnes GitHub-Repository**. Es liest und
-schreibt direkt die Issues dieses Repos – kein separates Datenmodell, keine
-Synchronisation, kein Backend. Der Status einer Karte ist ein GitHub-Label
+A lightweight Kanban board for **a single GitHub repository**. It reads and
+writes the issues of that repo directly – no separate data model, no
+synchronization, no backend. A card's status is a GitHub label
 (`status:todo`, `status:in-progress`, `status:review`, `status:done`).
 
-## Wie es funktioniert
+## How it works
 
-- **Spalten = Labels.** Jede Spalte entspricht einem `status:*`-Label. Eine Karte
-  verschieben ändert per API das Label des Issues. Issues ohne Status-Label
-  landen automatisch in „To Do“.
-- **Kein Backend.** Die App läuft komplett im Browser (Nuxt im SPA-Modus) und
-  spricht direkt mit der GitHub REST API über [Octokit](https://github.com/octokit/rest.js).
-- **Auth per Personal Access Token.** Kein OAuth-Server nötig. Der Token wird
-  nur lokal im Browser (`localStorage`) gespeichert.
-- **Reihenfolge innerhalb einer Spalte wird nicht gespeichert** – GitHub-Issues
-  haben kein natives Sortierfeld. Nur die Spalte (der Status) ist persistent.
+- **Columns = labels.** Each column corresponds to a `status:*` label. Moving
+  a card changes the issue's label via the API. Issues without a status label
+  automatically land in "To Do".
+- **No backend.** The app runs entirely in the browser (Nuxt in SPA mode) and
+  talks directly to the GitHub REST API via [Octokit](https://github.com/octokit/rest.js).
+- **Auth via Personal Access Token.** No OAuth server needed. The token is
+  stored only locally in the browser (`localStorage`).
+- **Order within a column is not saved** – GitHub issues have no native
+  sorting field. Only the column (the status) is persisted.
 
-## Personal Access Token erstellen
+## Creating a Personal Access Token
 
-1. [github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta) öffnen
-2. „Generate new token“ → **Fine-grained token**
-3. Repository access → **Only select repositories** → dein Repo wählen
-4. Unter „Repository permissions“: **Issues → Read and write**
-5. Token erzeugen und in der App eintragen
+1. Open [github.com/settings/tokens?type=beta](https://github.com/settings/tokens?type=beta)
+2. "Generate new token" → **Fine-grained token**
+3. Repository access → **Only select repositories** → choose your repo
+4. Under "Repository permissions": **Issues → Read and write**
+5. Generate the token and enter it in the app
 
-Der Token braucht keine weiteren Rechte.
+The token doesn't need any further permissions.
 
-## Deployment auf GitHub Pages
+## Deployment to GitHub Pages
 
-Das Projekt enthält einen fertigen Workflow (`.github/workflows/deploy.yml`):
+The project includes a ready-made workflow (`.github/workflows/deploy.yml`):
 
-1. Repo-Einstellungen → **Pages** → Source auf **GitHub Actions** stellen
-2. Code auf den `main`-Branch pushen
-3. Der Workflow baut die App (`nuxt generate`) und veröffentlicht sie automatisch
+1. Repo settings → **Pages** → set Source to **GitHub Actions**
+2. Push the code to the `main` branch
+3. The workflow builds the app (`nuxt generate`) and publishes it automatically
 
-Die `baseURL` wird im Workflow automatisch auf `/<repo-name>/` gesetzt, passend
-zu einer GitHub-Projekt-Page (`https://<user>.github.io/<repo-name>/`). Falls
-du stattdessen eine User-/Org-Page (`https://<user>.github.io`) nutzt, in
-`.github/workflows/deploy.yml` die Zeile
+The `baseURL` is automatically set in the workflow to `/<repo-name>/`, matching
+a GitHub project page (`https://<user>.github.io/<repo-name>/`). If you're
+using a user/org page instead (`https://<user>.github.io`), change the line
 
 ```yaml
 NUXT_APP_BASE_URL: /${{ github.event.repository.name }}/
 ```
 
-zu
+in `.github/workflows/deploy.yml` to
 
 ```yaml
 NUXT_APP_BASE_URL: /
 ```
 
-ändern.
+## Embedding in the README
 
-## In die README einbetten
-
-Die App selbst kann nicht in ein gerendertes README eingebettet werden (GitHub
-rendert dort kein JavaScript). Praktikabel ist ein Link/Badge:
+The app itself cannot be embedded in a rendered README (GitHub doesn't render
+JavaScript there). A link/badge is the practical option:
 
 ```markdown
-[📋 Kanban-Board öffnen](https://<user>.github.io/<repo-name>/)
+[📋 Open Kanban Board](https://<user>.github.io/<repo-name>/)
 ```
 
-## Projektstruktur
+## Project structure
 
 ```
-├── app.vue                    Root-Komponente
-├── pages/index.vue            Zeigt Settings oder Board
+├── app.vue                    Root component
+├── pages/index.vue            Shows settings or board
 ├── components/
-│   ├── SettingsPanel.vue      Owner/Repo/Token-Eingabe
-│   ├── KanbanBoard.vue        Lädt Issues, orchestriert Spalten & Modal
-│   ├── KanbanColumn.vue       Eine Spalte inkl. Drag & Drop
-│   ├── IssueCard.vue          Einzelne Karte
-│   └── IssueModal.vue         Issue anzeigen/bearbeiten/erstellen
+│   ├── SettingsPanel.vue      Owner/repo/token input
+│   ├── KanbanBoard.vue        Loads issues, orchestrates columns & modal
+│   ├── KanbanColumn.vue       A single column incl. drag & drop
+│   ├── IssueCard.vue          Individual card
+│   └── IssueModal.vue         View/edit/create issue
 ├── composables/
-│   ├── useSettings.ts         Zugangsdaten-Verwaltung (localStorage)
-│   └── useGithub.ts           Alle GitHub-API-Aufrufe
-└── assets/scss/               Design-Tokens (Farben, Typografie, Spacing)
+│   ├── useSettings.ts         Credentials management (localStorage)
+│   └── useGithub.ts           All GitHub API calls
+└── assets/scss/               Design tokens (colors, typography, spacing)
 ```
 
-## Anpassen
+## Customizing
 
-- **Weitere Spalten:** `STATUS_COLUMNS` in `composables/useGithub.ts` erweitern.
-- **Andere Label-Namen:** `labelName` in `STATUS_COLUMNS` anpassen.
-- **Nur offene Issues:** Standardverhalten. Um geschlossene ebenfalls
-  anzuzeigen, `state: 'open'` in `fetchIssues()` (`useGithub.ts`) anpassen.
+- **More columns:** extend `STATUS_COLUMNS` in `composables/useGithub.ts`.
+- **Different label names:** adjust `labelName` in `STATUS_COLUMNS`.
+- **Open issues only:** default behavior. To also show closed issues,
+  adjust `state: 'open'` in `fetchIssues()` (`useGithub.ts`).
