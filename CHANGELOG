@@ -1,7 +1,7 @@
 # Changelog
 Welcome to the Changelog. The versioning works as follows:
 - `X` is for new major features
-- `Y` is for changes to existing features
+- `Y` is for changes to existing features and new small features
 - `Z` is for bug fixes and minor changes
 
 Changes in the repository not influencing the actual application e.g. Issue Templates or Workflows do not require a version change.
