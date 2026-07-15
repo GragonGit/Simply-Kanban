@@ -1,0 +1,27 @@
+{
+  "name": "repo-kanban-board",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.15.0",
+    "@nuxt/eslint": "^1.16.0",
+    "@nuxt/icon": "^2.3.1",
+    "@octokit/rest": "^20.1.1",
+    "better-sqlite3": "^12.11.1",
+    "eslint": "^10.7.0",
+    "nuxt": "^4.4.8",
+    "vue": "^3.5.39",
+    "vue-router": "^5.1.0",
+    "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "sass": "^1.101.0"
+  }
+}

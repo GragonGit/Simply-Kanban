@@ -1,0 +1,46 @@
+// ---------------------------------------------------------------------------
+// Design tokens – "Git-Log"-Ästhetik: Monospace für Struktur (Issue-Nummern,
+// Spalten-Header), klare Sans für Inhalte. Jede Statusspalte trägt ihre
+// eigene Akzentfarbe statt eines einzelnen generischen Signalfarbtons.
+// ---------------------------------------------------------------------------
+
+// Farben
+$color-bg: #f6f7f9;
+$color-surface: #ffffff;
+$color-surface-sunken: #eef0f3;
+$color-ink: #14171f;
+$color-ink-soft: #3a3f4b;
+$color-muted: #6b7280;
+$color-border: #e2e5ea;
+$color-border-strong: #cbd1db;
+
+$color-todo: #94a3b8;
+$color-progress: #f59e0b;
+$color-review: #8b5cf6;
+$color-done: #10b981;
+$color-danger: #dc2626;
+
+// Typografie
+$font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+$font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+// Abstände
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 24px;
+$space-6: 32px;
+$space-7: 48px;
+
+// Radien & Schatten
+$radius-sm: 5px;
+$radius-md: 9px;
+$radius-lg: 14px;
+
+$shadow-card: 0 1px 2px rgba(20, 23, 31, 0.06), 0 1px 1px rgba(20, 23, 31, 0.04);
+$shadow-card-hover: 0 6px 16px rgba(20, 23, 31, 0.12), 0 2px 4px rgba(20, 23, 31, 0.06);
+$shadow-modal: 0 20px 60px rgba(20, 23, 31, 0.25);
+
+$transition-fast: 120ms ease;
+$transition-base: 180ms ease;
