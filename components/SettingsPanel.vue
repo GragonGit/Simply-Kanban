@@ -1,32 +1,29 @@
 <template>
   <div class="settings">
     <div class="settings__card">
-      <p class="settings__eyebrow">Setup</p>
-      <h1 class="settings__title">Board mit einem Repo verbinden</h1>
-      <p class="settings__lead">
-        Das Board arbeitet direkt mit den Issues eines einzelnen Repositories. Zugangsdaten bleiben
-        ausschließlich in deinem Browser (localStorage) – es gibt keinen Server dazwischen.
-      </p>
+      <p class="settings__eyebrow">{{ $t('settingsPanel.setup') }}</p>
+      <h1 class="settings__title">{{ $t('settingsPanel.connectRepo') }}</h1>
+      <p class="settings__lead">{{ $t('settingsPanel.info') }}</p>
 
       <form class="settings__form" @submit.prevent="handleSubmit">
         <div class="settings__row">
           <label class="settings__field">
-            <span class="settings__label">Owner</span>
-            <input v-model="form.owner" type="text" placeholder="z. B. octocat" autocomplete="off" />
+            <span class="settings__label">{{ $t('settingsPanel.owner') }}</span>
+            <input v-model="form.owner" type="text" :placeholder="$t('settingsPanel.ownerPlaceholder')" autocomplete="off" />
           </label>
           <label class="settings__field">
-            <span class="settings__label">Repository</span>
-            <input v-model="form.repo" type="text" placeholder="z. B. hello-world" autocomplete="off" />
+            <span class="settings__label">{{ $t('settingsPanel.repository') }}</span>
+            <input v-model="form.repo" type="text" :placeholder="$t('settingsPanel.repositoryPlaceholder')" autocomplete="off" />
           </label>
         </div>
 
         <label class="settings__field">
-          <span class="settings__label">Personal Access Token</span>
-          <input v-model="form.token" type="password" placeholder="github_pat_…" autocomplete="off" />
+          <span class="settings__label">{{ $t('settingsPanel.pat') }}</span>
+          <input v-model="form.token" type="password" :placeholder="$t('settingsPanel.patPlaceholder')" autocomplete="off" />
         </label>
 
         <p class="settings__hint">
-          Fine-grained Token mit Lesen/Schreiben-Rechten für „Issues“ auf genau dieses Repo, erstellbar unter
+          {{ $t('settingsPanel.hint') }}
           <code>github.com/settings/tokens?type=beta</code>.
         </p>
 
@@ -34,9 +31,9 @@
 
         <div class="settings__actions">
           <button type="submit" class="btn btn--primary" :disabled="!canSubmit || status === 'testing'">
-            {{ status === 'testing' ? 'Verbinde…' : 'Verbinden' }}
+            {{ status === 'testing' ? $t('settingsPanel.connecting') : $t('settingsPanel.connect') }}
           </button>
-          <button type="button" class="btn btn--ghost" @click="handleReset">Zurücksetzen</button>
+          <button type="button" class="btn btn--ghost" @click="handleReset">{{ $t('settingsPanel.clear') }}</button>
         </div>
       </form>
     </div>
@@ -44,8 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
-import { useGithub } from '../composables/useGithub';
 const { settings, save, clear } = useSettings()
 const { testConnection } = useGithub()
 
@@ -75,7 +70,7 @@ async function handleSubmit() {
     emit('connected')
   } catch (err: any) {
     status.value = 'error'
-    errorMessage.value = err?.message || 'Verbindung fehlgeschlagen.'
+    errorMessage.value = err?.message || $t('settingsPanel.connectionError')
   }
 }
 

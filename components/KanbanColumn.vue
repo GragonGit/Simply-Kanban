@@ -4,7 +4,7 @@
       <div class="column__accent" />
       <h2 class="column__title">{{ column.label }}</h2>
       <span class="column__count">{{ issues.length }}</span>
-      <button class="column__add" title="Neues Issue in dieser Spalte" @click="emit('add', column.key)">+</button>
+      <button class="column__add" :title="$t('kanbanColumn.newIssue')" @click="emit('add', column.key)">+</button>
     </header>
 
     <draggable
@@ -22,7 +22,7 @@
       </template>
 
       <template #footer>
-        <p v-if="!issues.length" class="column__empty">Keine Issues</p>
+        <p v-if="!issues.length" class="column__empty">{{ $t('kanbanColumn.noIssues')}}</p>
       </template>
     </draggable>
   </section>

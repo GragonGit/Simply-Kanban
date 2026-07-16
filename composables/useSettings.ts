@@ -25,7 +25,7 @@ export function useSettings() {
       const parsed = JSON.parse(raw) as GithubSettings
       settings.value = { ...emptySettings(), ...parsed }
     } catch (err) {
-      console.error('Gespeicherte Einstellungen konnten nicht gelesen werden.', err)
+      console.error($t('saveSettingsError'), err)
     }
   }
 

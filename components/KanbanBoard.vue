@@ -7,15 +7,15 @@
       </div>
       <div class="topbar__actions">
         <button class="btn btn--ghost" :disabled="loading" @click="load">
-          {{ loading ? 'Lädt…' : 'Aktualisieren' }}
+          {{ loading ? $t('kanbanBoard.loading') : $t('kanbanBoard.refresh') }}
         </button>
-        <button class="btn btn--ghost" @click="disconnect">Repo wechseln</button>
+        <button class="btn btn--ghost" @click="disconnect">{{ $t('kanbanBoard.changeRepo') }}</button>
       </div>
     </header>
 
     <p v-if="errorMessage" class="banner banner--error" role="alert">{{ errorMessage }}</p>
 
-    <div v-if="loading && !issues.length" class="loading">Issues werden geladen…</div>
+    <div v-if="loading && !issues.length" class="loading">{{ $t('kanbanBoard.loadingIssues') }}</div>
 
     <div v-else class="board">
       <KanbanColumn
@@ -68,7 +68,7 @@ async function load() {
     }
     issues.value = await fetchIssues()
   } catch (err: any) {
-    errorMessage.value = err?.message || 'Issues konnten nicht geladen werden.'
+    errorMessage.value = err?.message || $t('kanbanBoard.couldNotLoadIssues')
   } finally {
     loading.value = false
   }
@@ -94,12 +94,12 @@ function closeModal() {
 
 async function handleMoved(issue: BoardIssue, newStatusKey: string) {
   const previousStatus = issue.status
-  issue.status = newStatusKey // optimistisches Update für flüssiges Drag&Drop
+  issue.status = newStatusKey
   try {
     await updateIssueStatus(issue, newStatusKey)
   } catch (err: any) {
     issue.status = previousStatus
-    errorMessage.value = err?.message || 'Status konnte nicht aktualisiert werden.'
+    errorMessage.value = err?.message || $t('kanbanBoard.couldUpdateStatus')
   }
 }
 
@@ -123,7 +123,7 @@ async function handleSave(payload: { title: string; body: string; status: string
     closeModal()
     await load()
   } catch (err: any) {
-    errorMessage.value = err?.message || 'Speichern fehlgeschlagen.'
+    errorMessage.value = err?.message || $t('kanbanBoard.savingFailed')
   }
 }
 

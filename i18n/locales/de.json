@@ -1,0 +1,61 @@
+{
+  "issueCard": {
+    "now": "gerade eben",
+    "hoursAgo": "vor {n}h",
+    "daysAgo": "vor {n}d"
+  },
+  "issueModal": {
+    "newIssue": "Neues Issue",
+    "openInGitHub": "Auf GitHub öffnen",
+    "title": "Titel",
+    "titlePlaceholder": "Kurze, klare Beschreibung",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Details, Kontext, Akzeptanzkriterien…",
+    "status": "Status",
+    "closeIssue": "Issue auf GitHub zusätzlich schließen",
+    "cancel": "Abbrechen",
+    "saving": "Speichere",
+    "save": "Speichern",
+    "createIssue": "Issue erstellen"
+  },
+  "kanbanBoard": {
+    "loading": "Lädt…",
+    "refresh": "Aktualisieren",
+    "changeRepo": "Repo wechseln",
+    "loadingIssues": "Issues werden geladen…",
+    "couldNotLoadIssues": "Issues konnten nicht geladen werden.",
+    "couldNotUpdateStatus": "Status konnte nicht aktualisiert werden.",
+    "savingFailed": "Speichern fehlgeschlagen."
+  },
+  "kanbanColumn": {
+    "newIssue": "Neues Issue in dieser Spalte",
+    "noIssues": "Keine Issues"
+  },
+  "settingsPanel": {
+    "setup": "Setup",
+    "connectRepo": "Board mit einem Repo verbinden",
+    "info": "Das Board arbeitet direkt mit den Issues eines einzelnen Repositories. Zugangsdaten bleiben ausschließlich in deinem Browser (localStorage) – es gibt keinen Server dazwischen.",
+    "owner": "Owner",
+    "ownerPlaceholder": "z.B. octocat",
+    "repository": "Repository",
+    "repositoryPlaceholder": "z.B. hello-world",
+    "pat": "Personal Access Token",
+    "patPlaceholder": "github_pat_…",
+    "hint": "Fine-grained Token mit Read/Write-Rechten für „Issues“ auf genau dieses Repo, erstellbar unter",
+    "connecting": "Verbinden…",
+    "connect": "Verbinden",
+    "clear": "Zurücksetzen",
+    "connectionError": "Verbindung fehlgeschlagen."
+  },
+  "useGitHub": {
+    "noPat": "Kein Access Token hinterlegt. Bitte in den Einstellungen eintragen.",
+    "pat401": "Token ungültig oder abgelaufen (401).",
+    "pat403": "Kein Zugriff – Token-Scope prüfen oder Rate Limit erreicht (403).",
+    "pat404": "Repo nicht gefunden. Owner/Repo-Name und Token-Rechte prüfen (404).",
+    "unknownError": "Unbekannter Fehler bei der GitHub-Anfrage.",
+    "unknownColumn": "Unbekannte Spalte:"
+  },
+  "useSettings": {
+    "saveSettingsError": "Gespeicherte Einstellungen konnten nicht gelesen werden."
+  }
+}
