@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Repo Kanban',
+      title: 'Simply Kanban',
       meta: [
         { name: 'description', content: 'A Kanban-Board for individual GitHub-Repositories.' }
       ],
