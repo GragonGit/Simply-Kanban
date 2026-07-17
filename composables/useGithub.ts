@@ -1,5 +1,4 @@
-import { Octokit } from '@octokit/rest'
-import { useSettings } from './useSettings'
+import { Octokit } from "@octokit/rest"
 
 export interface StatusColumn {
   key: string
@@ -8,8 +7,6 @@ export interface StatusColumn {
   color: string
 }
 
-// Die vier Spalten des Boards. Jede Spalte entspricht einem GitHub-Label.
-// Ein Issue ohne Status-Label gilt als "To Do".
 export const STATUS_COLUMNS: StatusColumn[] = [
   { key: 'todo', label: 'To Do', labelName: 'status:todo', color: '94a3b8' },
   { key: 'in-progress', label: 'In Progress', labelName: 'status:in-progress', color: 'f59e0b' },
@@ -54,7 +51,7 @@ export function useGithub() {
 
   function client(): Octokit {
     if (!settings.value.token) {
-      throw new GithubApiError('Kein Access Token hinterlegt. Bitte in den Einstellungen eintragen.')
+      throw new GithubApiError($t('useGitHub.noPat'))
     }
     return new Octokit({ auth: settings.value.token })
   }
@@ -65,19 +62,18 @@ export function useGithub() {
     } catch (err: any) {
       const status = err?.status
       if (status === 401) {
-        throw new GithubApiError('Token ungültig oder abgelaufen (401).')
+        throw new GithubApiError($t('useGitHub.pat401'))
       }
       if (status === 403) {
-        throw new GithubApiError('Kein Zugriff – Token-Scope prüfen oder Rate Limit erreicht (403).')
+        throw new GithubApiError($t('useGitHub.pat403'))
       }
       if (status === 404) {
-        throw new GithubApiError('Repo nicht gefunden. Owner/Repo-Name und Token-Rechte prüfen (404).')
+        throw new GithubApiError($t('useGitHub.pat404'))
       }
-      throw new GithubApiError(err?.message || 'Unbekannter Fehler bei der GitHub-Anfrage.')
+      throw new GithubApiError(err?.message || $t('useGitHub.unknownError'))
     }
   }
 
-  /** Legt fehlende status:*-Labels im Repo an (einmalig, mit Spaltenfarben). */
   async function ensureStatusLabelsExist(): Promise<void> {
     return wrap(async () => {
       const octokit = client()
@@ -133,13 +129,12 @@ export function useGithub() {
     })
   }
 
-  /** Ändert den Status eines Issues, indem das alte status:*-Label durch das neue ersetzt wird. */
   async function updateIssueStatus(issue: BoardIssue, newStatusKey: string): Promise<void> {
     return wrap(async () => {
       const octokit = client()
       const { owner, repo } = settings.value
       const col = STATUS_COLUMNS.find((c) => c.key === newStatusKey)
-      if (!col) throw new GithubApiError(`Unbekannte Spalte: ${newStatusKey}`)
+      if (!col) throw new GithubApiError($t('unknownColumn') + ` ${newStatusKey}`)
       const keptLabels = issue.labels.map((l) => l.name).filter((name) => !STATUS_LABEL_NAMES.has(name))
       await octokit.issues.update({
         owner,
@@ -191,7 +186,6 @@ export function useGithub() {
     })
   }
 
-  /** Prüft die Zugangsdaten mit einem leichten Request (für den "Verbinden"-Test in den Einstellungen). */
   async function testConnection(): Promise<void> {
     return wrap(async () => {
       const octokit = client()

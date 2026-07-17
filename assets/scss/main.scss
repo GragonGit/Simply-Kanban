@@ -23,11 +23,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, p {
+h1,
+h2,
+h3,
+h4,
+p {
   margin: 0;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
   color: inherit;
@@ -39,6 +46,10 @@ button {
 
 a {
   color: inherit;
+
+  &:hover {
+    color: $color-ink-soft;
+  }
 }
 
 :focus-visible {
@@ -51,6 +62,7 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {

@@ -1,22 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: '2026-07-15',
   devtools: { enabled: true },
-
-  // Reines SPA: die App läuft komplett im Browser und spricht direkt
-  // mit der GitHub API. Kein eigenes Backend nötig -> GitHub Pages tauglich.
   ssr: false,
 
   app: {
-    // Für ein GitHub-Pages-Projekt liegt die Seite unter
-    // https://<user>.github.io/<repo>/ – deshalb muss die baseURL den
-    // Repo-Namen enthalten. Wird im Deploy-Workflow automatisch gesetzt
-    // (NUXT_APP_BASE_URL), lokal reicht "/".
-    // baseURL: process.env.NUXT_APP_BASE_URL || '/',
     head: {
       title: 'Repo Kanban',
       meta: [
-        { name: 'description', content: 'Ein Kanban-Board für ein einzelnes GitHub-Repository, direkt auf Issues gemappt.' }
+        { name: 'description', content: 'A Kanban-Board for individual GitHub-Repositories.' }
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: 'favicon.svg' },
@@ -32,17 +24,18 @@ export default defineNuxtConfig({
 
   css: ['~/assets/scss/main.scss'],
 
-  // vite: {
-  //   css: {
-  //     preprocessorOptions: {
-  //       scss: {
-  //         api: 'modern-compiler'
-  //       }
-  //     }
-  //   }
-  // },
-
   typescript: {
     strict: true
+  },
+
+  modules: [
+    '@nuxtjs/i18n'
+  ],
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', language: 'en-US', file: 'en.json' },
+      { code: 'de', name: 'German', language: 'de-DE', file: 'de.json' }
+    ],
+    defaultLocale: 'en',
   }
 })

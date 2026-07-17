@@ -1,9 +1,45 @@
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { STATUS_COLUMNS, type BoardIssue } from '../composables/useGithub'
-import { useSettings } from '../composables/useSettings'
-import { useGithub } from '../composables/useGithub'
+<template>
+  <div class="board-page">
+    <header class="topbar">
+      <div class="topbar__identity">
+        <span class="topbar__dot" />
+        <span class="topbar__repo">{{ settings.owner }}/{{ settings.repo }}</span>
+      </div>
+      <div class="topbar__actions">
+        <button class="btn btn--ghost" :disabled="loading" @click="load">
+          {{ loading ? $t('kanbanBoard.loading') : $t('kanbanBoard.refresh') }}
+        </button>
+        <button class="btn btn--ghost" @click="disconnect">{{ $t('kanbanBoard.changeRepo') }}</button>
+      </div>
+    </header>
 
+    <p v-if="errorMessage" class="banner banner--error" role="alert">{{ errorMessage }}</p>
+
+    <div v-if="loading && !issues.length" class="loading">{{ $t('kanbanBoard.loadingIssues') }}</div>
+
+    <div v-else class="board">
+      <KanbanColumn
+        v-for="col in columns"
+        :key="col.key"
+        :column="col"
+        :issues="col.issues"
+        @open="openIssue"
+        @moved="handleMoved"
+        @add="openNewIssue"
+      />
+    </div>
+
+    <IssueModal
+      v-if="showModal"
+      :issue="activeIssue"
+      :default-status="modalDefaultStatus"
+      @close="closeModal"
+      @save="handleSave"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
 const { settings, clear } = useSettings()
 const { fetchIssues, updateIssueStatus, updateIssueContent, createIssue, ensureStatusLabelsExist } = useGithub()
 
@@ -32,7 +68,7 @@ async function load() {
     }
     issues.value = await fetchIssues()
   } catch (err: any) {
-    errorMessage.value = err?.message || 'Issues konnten nicht geladen werden.'
+    errorMessage.value = err?.message || $t('kanbanBoard.couldNotLoadIssues')
   } finally {
     loading.value = false
   }
@@ -58,12 +94,12 @@ function closeModal() {
 
 async function handleMoved(issue: BoardIssue, newStatusKey: string) {
   const previousStatus = issue.status
-  issue.status = newStatusKey // optimistisches Update für flüssiges Drag&Drop
+  issue.status = newStatusKey
   try {
     await updateIssueStatus(issue, newStatusKey)
   } catch (err: any) {
     issue.status = previousStatus
-    errorMessage.value = err?.message || 'Status konnte nicht aktualisiert werden.'
+    errorMessage.value = err?.message || $t('kanbanBoard.couldUpdateStatus')
   }
 }
 
@@ -87,7 +123,7 @@ async function handleSave(payload: { title: string; body: string; status: string
     closeModal()
     await load()
   } catch (err: any) {
-    errorMessage.value = err?.message || 'Speichern fehlgeschlagen.'
+    errorMessage.value = err?.message || $t('kanbanBoard.savingFailed')
   }
 }
 
@@ -95,47 +131,6 @@ function disconnect() {
   clear()
 }
 </script>
-
-<template>
-  <div class="board-page">
-    <header class="topbar">
-      <div class="topbar__identity">
-        <span class="topbar__dot" />
-        <span class="topbar__repo">{{ settings.owner }}/{{ settings.repo }}</span>
-      </div>
-      <div class="topbar__actions">
-        <button class="btn btn--ghost" :disabled="loading" @click="load">
-          {{ loading ? 'Lädt…' : 'Aktualisieren' }}
-        </button>
-        <button class="btn btn--ghost" @click="disconnect">Repo wechseln</button>
-      </div>
-    </header>
-
-    <p v-if="errorMessage" class="banner banner--error" role="alert">{{ errorMessage }}</p>
-
-    <div v-if="loading && !issues.length" class="loading">Issues werden geladen…</div>
-
-    <div v-else class="board">
-      <KanbanColumn
-        v-for="col in columns"
-        :key="col.key"
-        :column="col"
-        :issues="col.issues"
-        @open="openIssue"
-        @moved="handleMoved"
-        @add="openNewIssue"
-      />
-    </div>
-
-    <IssueModal
-      v-if="showModal"
-      :issue="activeIssue"
-      :default-status="modalDefaultStatus"
-      @close="closeModal"
-      @save="handleSave"
-    />
-  </div>
-</template>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;

@@ -1,9 +1,49 @@
-<script setup lang="ts">
-import { computed, ref, reactive, onMounted, onUnmounted } from 'vue';
-import { STATUS_COLUMNS, type BoardIssue } from '../composables/useGithub'
+<template>
+  <div class="overlay" @mousedown="handleOverlayClick">
+    <div class="modal" role="dialog" aria-modal="true">
+      <header class="modal__head">
+        <span v-if="isEditMode" class="modal__eyebrow">Issue #{{ issue!.number }}</span>
+        <span v-else class="modal__eyebrow">{{ $t('issueModal.newIssue') }}</span>
+        <a v-if="isEditMode" :href="issue!.htmlUrl" target="_blank" rel="noopener" class="modal__link">
+          {{ $t('issueModal.openInGitHub') }} ↗
+        </a>
+      </header>
 
+      <label class="field">
+        <span class="field__label">{{ $t('issueModal.title') }}</span>
+        <input v-model="form.title" type="text" :placeholder="$t('issueModal.titlePlaceholder')" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">{{ $t('issueModal.description') }}</span>
+        <textarea v-model="form.body" rows="6" :placeholder="$t('issueModal.descriptionPlaceholder')" />
+      </label>
+
+      <label class="field">
+        <span class="field__label">{{ $t('issueModal.status') }}</span>
+        <select v-model="form.status">
+          <option v-for="col in STATUS_COLUMNS" :key="col.key" :value="col.key">{{ col.label }}</option>
+        </select>
+      </label>
+
+      <label v-if="isEditMode && form.status === 'done'" class="field field--checkbox">
+        <input v-model="form.closeIssue" type="checkbox" />
+        <span>{{ $t('issueModal.closeIssue') }}</span>
+      </label>
+
+      <footer class="modal__actions">
+        <button class="btn btn--ghost" @click="emit('close')">{{ $t('issueModal.cancel') }}</button>
+        <button class="btn btn--primary" :disabled="!canSave || saving" @click="handleSave">
+          {{ saving ? $t('issueModal.saving') : isEditMode ? $t('issueModal.save') : $t('issueModal.createIssue') }}
+        </button>
+      </footer>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
 const props = defineProps<{
-  issue: BoardIssue | null // null = "neues Issue" Modus
+  issue: BoardIssue | null
   defaultStatus?: string
 }>()
 
@@ -46,49 +86,6 @@ function handleKeydown(e: KeyboardEvent) {
 onMounted(() => window.addEventListener('keydown', handleKeydown))
 onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 </script>
-
-<template>
-  <div class="overlay" @mousedown="handleOverlayClick">
-    <div class="modal" role="dialog" aria-modal="true">
-      <header class="modal__head">
-        <span v-if="isEditMode" class="modal__eyebrow">Issue #{{ issue!.number }}</span>
-        <span v-else class="modal__eyebrow">Neues Issue</span>
-        <a v-if="isEditMode" :href="issue!.htmlUrl" target="_blank" rel="noopener" class="modal__link">
-          Auf GitHub öffnen ↗
-        </a>
-      </header>
-
-      <label class="field">
-        <span class="field__label">Titel</span>
-        <input v-model="form.title" type="text" placeholder="Kurze, klare Beschreibung" />
-      </label>
-
-      <label class="field">
-        <span class="field__label">Beschreibung</span>
-        <textarea v-model="form.body" rows="6" placeholder="Details, Kontext, Akzeptanzkriterien…" />
-      </label>
-
-      <label class="field">
-        <span class="field__label">Status</span>
-        <select v-model="form.status">
-          <option v-for="col in STATUS_COLUMNS" :key="col.key" :value="col.key">{{ col.label }}</option>
-        </select>
-      </label>
-
-      <label v-if="isEditMode && form.status === 'done'" class="field field--checkbox">
-        <input v-model="form.closeIssue" type="checkbox" />
-        <span>Issue auf GitHub zusätzlich schließen</span>
-      </label>
-
-      <footer class="modal__actions">
-        <button class="btn btn--ghost" @click="emit('close')">Abbrechen</button>
-        <button class="btn btn--primary" :disabled="!canSave || saving" @click="handleSave">
-          {{ saving ? 'Speichere…' : isEditMode ? 'Speichern' : 'Issue erstellen' }}
-        </button>
-      </footer>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;

@@ -1,0 +1,64 @@
+{
+  "app": {
+    "imprint": "Imprint"
+  },
+  "issueCard": {
+    "now": "now",
+    "hoursAgo": "{n}h ago",
+    "daysAgo": "{n}d ago"
+  },
+  "issueModal": {
+    "newIssue": "New issue",
+    "openInGitHub": "Open in GitHub",
+    "title": "Title",
+    "titlePlaceholder": "Short, clear description",
+    "description": "Description",
+    "descriptionPlaceholder": "Details, context, acceptance criteria…",
+    "status": "Status",
+    "closeIssue": "Also close issue on GitHub",
+    "cancel": "Cancel",
+    "saving": "Saving",
+    "save": "Save",
+    "createIssue": "Create issue"
+  },
+  "kanbanBoard": {
+    "loading": "Loading…",
+    "refresh": "Refresh",
+    "changeRepo": "Change Repo",
+    "loadingIssues": "Loading issues…",
+    "couldNotLoadIssues": "Could not load issues.",
+    "couldNotUpdateStatus": "Could not update status.",
+    "savingFailed": "Saving failed."
+  },
+  "kanbanColumn": {
+    "newIssue": "New issue in this column",
+    "noIssues": "No Issues"
+  },
+  "settingsPanel": {
+    "setup": "Setup",
+    "connectRepo": "Connect board to a repo",
+    "info": "The board works directly with the issues of a single repository. Credentials stay exclusively in your browser (localStorage) — there's no server in between.",
+    "owner": "Owner",
+    "ownerPlaceholder": "e.g. octocat",
+    "repository": "Repository",
+    "repositoryPlaceholder": "e.g. hello-world",
+    "pat": "Personal Access Token",
+    "patPlaceholder": "github_pat_…",
+    "hint": "Fine-grained token with read/write permissions for \"Issues\" on this exact repo, created at",
+    "connecting": "Connecting…",
+    "connect": "Connect",
+    "clear": "Reset",
+    "connectionError": "Connection failed."
+  },
+  "useGitHub": {
+    "noPat": "No access token set. Please add one in the settings.",
+    "pat401": "Token invalid or expired (401).",
+    "pat403": "No access – check token scope or rate limit reached (403).",
+    "pat404": "Repo not found. Check owner/repo name and token permissions (404).",
+    "unknownError": "Unknown error during the GitHub request.",
+    "unknownColumn": "Unknown column:"
+  },
+  "useSettings": {
+    "saveSettingsError": "Could not read saved settings."
+  }
+}

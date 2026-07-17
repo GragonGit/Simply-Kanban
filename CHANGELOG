@@ -1,0 +1,18 @@
+# Changelog
+Welcome to the Changelog. The versioning works as follows:
+- `X` is for new major features
+- `Y` is for changes to existing features and new small features
+- `Z` is for bug fixes and minor changes
+
+Changes in the repository not influencing the actual application e.g. Issue Templates or Workflows do not require a version change.
+
+## 1.0.0 - Release
+- Kanban Boards!
+
+Clean simple Kanban Boards for GitHub that I like more than GitHub Projects are now ready for the public.
+
+**Originally, I wanted this to be a future project but while chatting with Claude it just kinda developed the whole application without major issues. For real, this took like 5 prompts. I'm not proud of this but more suprised how well it worked out of the box.**
+
+---
+
+**You reached the bottom of the changelog. Go get yourself a cookie! 🍪**

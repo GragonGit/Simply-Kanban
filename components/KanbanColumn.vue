@@ -1,44 +1,10 @@
-<script setup lang="ts">
-import { computed } from 'vue';
-import draggable from 'vuedraggable'
-import type { BoardIssue, StatusColumn } from '../composables/useGithub'
-
-const props = defineProps<{
-  column: StatusColumn
-  issues: BoardIssue[]
-}>()
-
-const emit = defineEmits<{
-  (e: 'open', issue: BoardIssue): void
-  (e: 'moved', issue: BoardIssue, newStatusKey: string): void
-  (e: 'add', statusKey: string): void
-}>()
-
-// Lokale, mutierbare Kopie für vuedraggable (v-model). Die eigentliche
-// Quelle der Wahrheit bleiben die GitHub-Issues; diese Liste ist nur die
-// visuelle Repräsentation während des Drag-Vorgangs.
-const localIssues = computed({
-  get: () => props.issues,
-  set: () => {
-    /* vuedraggable mutiert hier zwischendurch – die eigentliche Umsortierung
-       wird über das @change-Event unten behandelt, nicht über den Setter. */
-  }
-})
-
-function handleChange(evt: any) {
-  if (evt.added) {
-    emit('moved', evt.added.element as BoardIssue, props.column.key)
-  }
-}
-</script>
-
 <template>
   <section class="column">
     <header class="column__head" :style="{ '--accent': `#${column.color}` }">
       <div class="column__accent" />
       <h2 class="column__title">{{ column.label }}</h2>
       <span class="column__count">{{ issues.length }}</span>
-      <button class="column__add" title="Neues Issue in dieser Spalte" @click="emit('add', column.key)">+</button>
+      <button class="column__add" :title="$t('kanbanColumn.newIssue')" @click="emit('add', column.key)">+</button>
     </header>
 
     <draggable
@@ -56,11 +22,43 @@ function handleChange(evt: any) {
       </template>
 
       <template #footer>
-        <p v-if="!issues.length" class="column__empty">Keine Issues</p>
+        <p v-if="!issues.length" class="column__empty">{{ $t('kanbanColumn.noIssues')}}</p>
       </template>
     </draggable>
   </section>
 </template>
+
+<script setup lang="ts">
+import draggable from 'vuedraggable'
+
+const props = defineProps<{
+  column: StatusColumn
+  issues: BoardIssue[]
+}>()  
+
+const emit = defineEmits<{
+  (e: 'open', issue: BoardIssue): void
+  (e: 'moved', issue: BoardIssue, newStatusKey: string): void
+  (e: 'add', statusKey: string): void
+}>()  
+
+// Lokale, mutierbare Kopie für vuedraggable (v-model). Die eigentliche
+// Quelle der Wahrheit bleiben die GitHub-Issues; diese Liste ist nur die
+// visuelle Repräsentation während des Drag-Vorgangs.
+const localIssues = computed({
+  get: () => props.issues,
+  set: () => {
+    /* vuedraggable mutiert hier zwischendurch – die eigentliche Umsortierung
+       wird über das @change-Event unten behandelt, nicht über den Setter. */
+  }     
+})  
+
+function handleChange(evt: any) {
+  if (evt.added) {
+    emit('moved', evt.added.element as BoardIssue, props.column.key)
+  }  
+}  
+</script>
 
 <style lang="scss" scoped>
 @use '~/assets/scss/variables' as *;
