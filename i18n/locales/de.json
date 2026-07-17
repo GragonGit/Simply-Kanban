@@ -1,4 +1,7 @@
 {
+  "app": {
+    "imprint": "Impressum"
+  },
   "issueCard": {
     "now": "gerade eben",
     "hoursAgo": "vor {n}h",

@@ -1,4 +1,7 @@
 {
+  "app": {
+    "imprint": "Imprint"
+  },
   "issueCard": {
     "now": "now",
     "hoursAgo": "{n}h ago",
