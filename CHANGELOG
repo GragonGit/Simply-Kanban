@@ -6,11 +6,11 @@ Welcome to the Changelog. The versioning works as follows:
 
 Changes in the repository not influencing the actual application e.g. Issue Templates or Workflows do not require a version change.
 
-## 1.1.0 - Title Change
-- Added Issue Labels to Card
+## 1.0.2 - Reduced Label Size & Fixed Translation Bug
+- Reduced label size
 - Fixed translation bug
 
-Showing the Issue "type" was a wanted feature and I fixed the bug while I was there as well.
+Found a bug of the translation showing an error and reduced label size.
 
 ## 1.0.1 - Title Change
 - Changed Title to Simply Kanban
