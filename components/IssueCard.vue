@@ -107,7 +107,7 @@ const relativeTime = computed(() => {
 
 .chip {
   font-family: $font-mono;
-  font-size: 11px;
+  font-size: 8px;
   padding: 2px 7px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--chip-color) 14%, white);
