@@ -44,14 +44,15 @@ function statusFromLabels(labels: IssueLabel[]): string {
   return match ? match.key : 'todo'
 }
 
-export class GithubApiError extends Error {}
+export class GithubApiError extends Error { }
 
 export function useGithub() {
   const { settings } = useSettings()
+  const { t } = useI18n()
 
   function client(): Octokit {
     if (!settings.value.token) {
-      throw new GithubApiError($t('useGitHub.noPat'))
+      throw new GithubApiError(t('useGitHub.noPat'))
     }
     return new Octokit({ auth: settings.value.token })
   }
@@ -62,15 +63,15 @@ export function useGithub() {
     } catch (err: any) {
       const status = err?.status
       if (status === 401) {
-        throw new GithubApiError($t('useGitHub.pat401'))
+        throw new GithubApiError(t('useGitHub.pat401'))
       }
       if (status === 403) {
-        throw new GithubApiError($t('useGitHub.pat403'))
+        throw new GithubApiError(t('useGitHub.pat403'))
       }
       if (status === 404) {
-        throw new GithubApiError($t('useGitHub.pat404'))
+        throw new GithubApiError(t('useGitHub.pat404'))
       }
-      throw new GithubApiError(err?.message || $t('useGitHub.unknownError'))
+      throw new GithubApiError(err?.message || t('useGitHub.unknownError'))
     }
   }
 
@@ -134,7 +135,7 @@ export function useGithub() {
       const octokit = client()
       const { owner, repo } = settings.value
       const col = STATUS_COLUMNS.find((c) => c.key === newStatusKey)
-      if (!col) throw new GithubApiError($t('unknownColumn') + ` ${newStatusKey}`)
+      if (!col) throw new GithubApiError(t('unknownColumn') + ` ${newStatusKey}`)
       const keptLabels = issue.labels.map((l) => l.name).filter((name) => !STATUS_LABEL_NAMES.has(name))
       await octokit.issues.update({
         owner,
