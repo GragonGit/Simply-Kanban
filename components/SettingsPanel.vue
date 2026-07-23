@@ -9,17 +9,17 @@
         <div class="settings__row">
           <label class="settings__field">
             <span class="settings__label">{{ $t('settingsPanel.owner') }}</span>
-            <input v-model="form.owner" type="text" :placeholder="$t('settingsPanel.ownerPlaceholder')" autocomplete="off" />
+            <input v-model="form.owner" type="text" :placeholder="$t('settingsPanel.ownerPlaceholder')" autocomplete="off" >
           </label>
           <label class="settings__field">
             <span class="settings__label">{{ $t('settingsPanel.repository') }}</span>
-            <input v-model="form.repo" type="text" :placeholder="$t('settingsPanel.repositoryPlaceholder')" autocomplete="off" />
+            <input v-model="form.repo" type="text" :placeholder="$t('settingsPanel.repositoryPlaceholder')" autocomplete="off" >
           </label>
         </div>
 
         <label class="settings__field">
           <span class="settings__label">{{ $t('settingsPanel.pat') }}</span>
-          <input v-model="form.token" type="password" :placeholder="$t('settingsPanel.patPlaceholder')" autocomplete="off" />
+          <input v-model="form.token" type="password" :placeholder="$t('settingsPanel.patPlaceholder')" autocomplete="off" >
         </label>
 
         <p class="settings__hint">

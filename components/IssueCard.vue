@@ -3,7 +3,7 @@
   <header class="card__head">
     <span class="card__number">#{{ issue.number }}</span>
     <span v-if="issue.assignee" class="card__avatar" :title="issue.assignee.login">
-      <img :src="issue.assignee.avatarUrl" :alt="issue.assignee.login" />
+      <img :src="issue.assignee.avatarUrl" :alt="issue.assignee.login" >
     </span>
   </header>
 
@@ -107,7 +107,7 @@ const relativeTime = computed(() => {
 
 .chip {
   font-family: $font-mono;
-  font-size: 11px;
+  font-size: 8px;
   padding: 2px 7px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--chip-color) 14%, white);

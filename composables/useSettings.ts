@@ -11,6 +11,7 @@ const emptySettings = (): GithubSettings => ({ token: '', owner: '', repo: '' })
 export function useSettings() {
   const settings = useState<GithubSettings>('github-settings', emptySettings)
   const hydrated = useState<boolean>('github-settings-hydrated', () => false)
+  const { t } = useI18n()
 
   const isConfigured = computed(
     () => !!(settings.value.token && settings.value.owner && settings.value.repo)
@@ -25,7 +26,7 @@ export function useSettings() {
       const parsed = JSON.parse(raw) as GithubSettings
       settings.value = { ...emptySettings(), ...parsed }
     } catch (err) {
-      console.error($t('saveSettingsError'), err)
+      console.error(t('saveSettingsError'), err)
     }
   }
 

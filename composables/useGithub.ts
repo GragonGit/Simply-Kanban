@@ -44,14 +44,15 @@ function statusFromLabels(labels: IssueLabel[]): string {
   return match ? match.key : 'todo'
 }
 
-export class GithubApiError extends Error {}
+export class GithubApiError extends Error { }
 
 export function useGithub() {
   const { settings } = useSettings()
+  const { t } = useI18n()
 
   function client(): Octokit {
     if (!settings.value.token) {
-      throw new GithubApiError($t('useGitHub.noPat'))
+      throw new GithubApiError(t('useGitHub.noPat'))
     }
     return new Octokit({ auth: settings.value.token })
   }
@@ -62,15 +63,15 @@ export function useGithub() {
     } catch (err: any) {
       const status = err?.status
       if (status === 401) {
-        throw new GithubApiError($t('useGitHub.pat401'))
+        throw new GithubApiError(t('useGitHub.pat401'))
       }
       if (status === 403) {
-        throw new GithubApiError($t('useGitHub.pat403'))
+        throw new GithubApiError(t('useGitHub.pat403'))
       }
       if (status === 404) {
-        throw new GithubApiError($t('useGitHub.pat404'))
+        throw new GithubApiError(t('useGitHub.pat404'))
       }
-      throw new GithubApiError(err?.message || $t('useGitHub.unknownError'))
+      throw new GithubApiError(err?.message || t('useGitHub.unknownError'))
     }
   }
 
@@ -95,6 +96,21 @@ export function useGithub() {
           })
         }
       }
+    })
+  }
+
+  async function fetchLabels(): Promise<IssueLabel[]> {
+    return wrap(async () => {
+      const octokit = client()
+      const { owner, repo } = settings.value
+      const raw = await octokit.paginate(octokit.issues.listLabelsForRepo, {
+        owner,
+        repo,
+        per_page: 100
+      })
+      return raw
+        .filter((l) => !STATUS_LABEL_NAMES.has(l.name))
+        .map((l) => ({ name: l.name, color: l.color || '888888' }))
     })
   }
 
@@ -134,7 +150,7 @@ export function useGithub() {
       const octokit = client()
       const { owner, repo } = settings.value
       const col = STATUS_COLUMNS.find((c) => c.key === newStatusKey)
-      if (!col) throw new GithubApiError($t('unknownColumn') + ` ${newStatusKey}`)
+      if (!col) throw new GithubApiError(t('unknownColumn') + ` ${newStatusKey}`)
       const keptLabels = issue.labels.map((l) => l.name).filter((name) => !STATUS_LABEL_NAMES.has(name))
       await octokit.issues.update({
         owner,
@@ -149,27 +165,50 @@ export function useGithub() {
     title?: string
     body?: string
     state?: 'open' | 'closed'
+    statusKey?: string
+    labels?: string[]
   }
 
   async function updateIssueContent(issueNumber: number, updates: UpdateContentPayload): Promise<void> {
     return wrap(async () => {
       const octokit = client()
       const { owner, repo } = settings.value
-      await octokit.issues.update({ owner, repo, issue_number: issueNumber, ...updates })
+      const { statusKey, labels: extraLabelNames, ...rest } = updates
+
+      // Combine Status- und Additional-Labels
+      let labels: string[] | undefined
+      if (statusKey !== undefined || extraLabelNames !== undefined) {
+        const col = STATUS_COLUMNS.find((c) => c.key === statusKey)
+        labels = [...(col ? [col.labelName] : []), ...(extraLabelNames ?? [])]
+      }
+
+      await octokit.issues.update({
+        owner,
+        repo,
+        issue_number: issueNumber,
+        ...rest,
+        ...(labels ? { labels } : {})
+      })
     })
   }
 
-  async function createIssue(title: string, body: string, statusKey: string): Promise<BoardIssue> {
+  async function createIssue(
+    title: string,
+    body: string,
+    statusKey: string,
+    extraLabelNames: string[] = []
+  ): Promise<BoardIssue> {
     return wrap(async () => {
       const octokit = client()
       const { owner, repo } = settings.value
       const col = STATUS_COLUMNS.find((c) => c.key === statusKey)
+      const labelNames = [...(col ? [col.labelName] : []), ...extraLabelNames]
       const { data } = await octokit.issues.create({
         owner,
         repo,
         title,
         body,
-        labels: col ? [col.labelName] : []
+        labels: labelNames
       })
       const labels = toLabelObjects(data.labels as any[])
       return {
@@ -196,6 +235,7 @@ export function useGithub() {
 
   return {
     ensureStatusLabelsExist,
+    fetchLabels,
     fetchIssues,
     updateIssueStatus,
     updateIssueContent,

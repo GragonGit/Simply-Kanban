@@ -103,22 +103,20 @@ async function handleMoved(issue: BoardIssue, newStatusKey: string) {
   }
 }
 
-async function handleSave(payload: { title: string; body: string; status: string; closeIssue: boolean }) {
+async function handleSave(payload: { title: string; body: string; status: string; closeIssue: boolean; labels: string[] }) {
   errorMessage.value = ''
   try {
     if (activeIssue.value) {
       const issueNumber = activeIssue.value.number
-      const statusChanged = activeIssue.value.status !== payload.status
       await updateIssueContent(issueNumber, {
         title: payload.title,
         body: payload.body,
+        statusKey: payload.status,
+        labels: payload.labels,
         ...(payload.closeIssue ? { state: 'closed' as const } : {})
       })
-      if (statusChanged) {
-        await updateIssueStatus(activeIssue.value, payload.status)
-      }
     } else {
-      await createIssue(payload.title, payload.body, payload.status)
+      await createIssue(payload.title, payload.body, payload.status, payload.labels)
     }
     closeModal()
     await load()
