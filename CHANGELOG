@@ -6,11 +6,12 @@ Welcome to the Changelog. The versioning works as follows:
 
 Changes in the repository not influencing the actual application e.g. Issue Templates or Workflows do not require a version change.
 
-## 1.0.2 - Reduced Label Size & Fixed Translation Bug
+## 1.1.0 - Added Label Selection
+- Added label selection to issue modal
 - Reduced label size
 - Fixed translation bug
 
-Found a bug of the translation showing an error and reduced label size.
+Added label selection in issue modal and fixed a bug of the translation showing an error while doing so.
 
 ## 1.0.1 - Title Change
 - Changed Title to Simply Kanban
