@@ -3,7 +3,7 @@
   <header class="card__head">
     <span class="card__number">#{{ issue.number }}</span>
     <span v-if="issue.assignee" class="card__avatar" :title="issue.assignee.login">
-      <img :src="issue.assignee.avatarUrl" :alt="issue.assignee.login" />
+      <img :src="issue.assignee.avatarUrl" :alt="issue.assignee.login" >
     </span>
   </header>
 

@@ -11,7 +11,7 @@
 
       <label class="field">
         <span class="field__label">{{ $t('issueModal.title') }}</span>
-        <input v-model="form.title" type="text" :placeholder="$t('issueModal.titlePlaceholder')" />
+        <input v-model="form.title" type="text" :placeholder="$t('issueModal.titlePlaceholder')" >
       </label>
 
       <label class="field">
@@ -27,7 +27,7 @@
       </label>
 
       <label v-if="isEditMode && form.status === 'done'" class="field field--checkbox">
-        <input v-model="form.closeIssue" type="checkbox" />
+        <input v-model="form.closeIssue" type="checkbox" >
         <span>{{ $t('issueModal.closeIssue') }}</span>
       </label>
 
@@ -64,7 +64,7 @@
               type="text"
               class="multiselect__search"
               :placeholder="$t('issueModal.searchLabels')"
-            />
+            >
 
             <p v-if="labelsLoading" class="multiselect__hint">{{ $t('issueModal.loadingLabels') }}</p>
             <p v-else-if="labelsError" class="multiselect__hint multiselect__hint--error">{{ labelsError }}</p>
@@ -72,7 +72,7 @@
               {{ $t('issueModal.noLabels') }}
             </p>
             <label v-for="label in filteredSelectableLabels" :key="label.name" class="multiselect__option">
-              <input v-model="form.labels" type="checkbox" :value="label.name" />
+              <input v-model="form.labels" type="checkbox" :value="label.name" >
               <span class="multiselect__dot" :style="{ background: '#' + label.color }" />
               <span class="multiselect__option-name">{{ label.name }}</span>
             </label>
